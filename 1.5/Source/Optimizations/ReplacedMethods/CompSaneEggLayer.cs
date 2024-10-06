@@ -1,4 +1,5 @@
-﻿using RimWorld;
+﻿using HarmonyLib;
+using RimWorld;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -21,50 +22,38 @@ namespace RedOpt
     public class CompSaneEggLayer : CompEggLayer
     {
         public CompProperties_SaneEggLayer SaneProps => (CompProperties_SaneEggLayer)props;
-        public PropertyInfo activeInfo = null;
+        public Func<CompEggLayer, bool> activeDelegate = null;
         public bool Active
         {
             get
             {
-                if (activeInfo == null)
-                {
-                    activeInfo = typeof(CompEggLayer).GetProperty("Active", BindingFlags.Instance | BindingFlags.NonPublic);
-                }
-                return (bool)activeInfo.GetValue(this);
+                activeDelegate ??= AccessTools.MethodDelegate<Func<CompEggLayer, bool>>(AccessTools.PropertyGetter(typeof(CompEggLayer), "Active"));
+                return activeDelegate(this);
             }
         }
 
-        public FieldInfo eggProgressInfo = null;
+        public AccessTools.FieldRef<CompEggLayer, float> eggProgressDelegate = null;
         public float EggProgress
         {
             get
             {
-                if (eggProgressInfo == null)
-                {
-                    eggProgressInfo = typeof(CompEggLayer).GetField("eggProgress", BindingFlags.Instance | BindingFlags.NonPublic);
-                }
-                return (float)eggProgressInfo.GetValue(this);
+                eggProgressDelegate ??= AccessTools.FieldRefAccess<CompEggLayer, float>("eggProgress");
+                return eggProgressDelegate(this);
             }
             set
             {
-                if (eggProgressInfo == null)
-                {
-                    eggProgressInfo = typeof(CompEggLayer).GetField("eggProgress", BindingFlags.Instance | BindingFlags.NonPublic);
-                }
-                eggProgressInfo.SetValue(this, value);
+                eggProgressDelegate ??= AccessTools.FieldRefAccess<CompEggLayer, float>("eggProgress");
+                eggProgressDelegate(this) = value;
             }
         }
 
-        public PropertyInfo progressStoppedBecauseUnfertilizedInfo = null;
+        public Func<CompEggLayer, bool> progressStoppedBecauseUnfertilizedDegegate = null;
         public bool ProgressStoppedBecauseUnfertilized
         {
             get
             {
-                if (progressStoppedBecauseUnfertilizedInfo == null)
-                {
-                    progressStoppedBecauseUnfertilizedInfo = typeof(CompEggLayer).GetProperty("ProgressStoppedBecauseUnfertilized", BindingFlags.Instance | BindingFlags.NonPublic);
-                }
-                return (bool)progressStoppedBecauseUnfertilizedInfo.GetValue(this);
+                progressStoppedBecauseUnfertilizedDegegate ??= AccessTools.MethodDelegate<Func<CompEggLayer, bool>>(AccessTools.PropertyGetter(typeof(CompEggLayer), "ProgressStoppedBecauseUnfertilized"));
+                return progressStoppedBecauseUnfertilizedDegegate(this);
             }
         }
 
@@ -94,6 +83,5 @@ namespace RedOpt
                 }
             }
         }
-
     }
 }
