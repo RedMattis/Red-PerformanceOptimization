@@ -22,7 +22,7 @@ namespace RedOpt
     public class CompSaneEggLayer : CompEggLayer
     {
         public CompProperties_SaneEggLayer SaneProps => (CompProperties_SaneEggLayer)props;
-        public Func<CompEggLayer, bool> activeDelegate = null;
+        static public Func<CompEggLayer, bool> activeDelegate = null;
         public bool Active
         {
             get
@@ -32,7 +32,7 @@ namespace RedOpt
             }
         }
 
-        public AccessTools.FieldRef<CompEggLayer, float> eggProgressDelegate = null;
+        static public AccessTools.FieldRef<CompEggLayer, float> eggProgressDelegate = null;
         public float EggProgress
         {
             get
@@ -47,7 +47,7 @@ namespace RedOpt
             }
         }
 
-        public Func<CompEggLayer, bool> progressStoppedBecauseUnfertilizedDegegate = null;
+        static public Func<CompEggLayer, bool> progressStoppedBecauseUnfertilizedDegegate = null;
         public bool ProgressStoppedBecauseUnfertilized
         {
             get
